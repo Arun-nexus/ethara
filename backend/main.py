@@ -44,4 +44,4 @@ app.include_router(branches_router)
 
 @app.get("/")
 async def root():
-    return {"message": "TaskFlow API is running 🚀", "docs": "/docs"}
+    return {"message": "TaskFlow API is running ", "docs": "/docs"}
