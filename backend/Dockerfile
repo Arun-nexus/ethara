@@ -1,6 +1,6 @@
-FROM python:3.11-buster
+FROM python:3.11-alpine
 
-RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev
 
 WORKDIR /app
 
