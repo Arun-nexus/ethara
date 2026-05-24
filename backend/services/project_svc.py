@@ -10,11 +10,12 @@ async def create_project(data: dict, owner_id: str, db) -> dict:
         "name":        data["name"],
         "description": data.get("description", ""),
         "owner_id":    owner_id,
-        "members":     [],          
+        "members":     [],          # [{user_id, permission}]
         "created_at":  datetime.utcnow()
     }
     await db.projects.insert_one(doc)
 
+    # Auto-create main branch for this project
     await db.branches.insert_one({
         "_id":        str(uuid.uuid4()),
         "project_id": project_id,

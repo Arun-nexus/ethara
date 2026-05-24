@@ -3,14 +3,16 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-
+    # MongoDB
     MONGODB_URI: str = "mongodb://localhost:27017"
     DB_NAME: str = "taskflow"
 
+    # JWT
     JWT_SECRET: str = "your-super-secret-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRE_MINUTES: int = 60 * 24 
+    JWT_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
+    # App
     APP_NAME: str = "TaskFlow"
     DEBUG: bool = False
     FRONTEND_URL: str = "http://localhost:5173"

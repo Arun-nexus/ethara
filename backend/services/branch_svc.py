@@ -34,7 +34,10 @@ async def create_feature_branch(project_id: str, name: str, creator_id: str, db)
 
 
 async def get_branch_timeline(project_id: str, db) -> dict:
-
+    """
+    Returns structured timeline for the git-style UI:
+    main branch commits + all feature branches with their commits
+    """
     branches = await get_project_branches(project_id, db)
     main     = next((b for b in branches if b["is_main"]), None)
     features = [b for b in branches if not b["is_main"]]
@@ -42,6 +45,7 @@ async def get_branch_timeline(project_id: str, db) -> dict:
     if not main:
         raise HTTPException(status_code=404, detail="Main branch not found")
 
+    # Enrich commits with task details
     async def enrich(commits):
         enriched = []
         for c in commits:

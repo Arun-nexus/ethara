@@ -32,7 +32,7 @@ async def list_my_projects(
 @router.get("/{project_id}")
 async def get_project(
     project_id: str,
-    _=Depends(check_project_permission("read")),  
+    _=Depends(check_project_permission("read")),   # min read access
     db=Depends(get_db)
 ):
     return await project_svc.get_project_by_id(project_id, db)
@@ -44,6 +44,7 @@ async def project_dashboard(
     _=Depends(check_project_permission("read")),
     db=Depends(get_db)
 ):
+    """Returns task stats: total, by status, overdue count"""
     return await get_dashboard_stats(project_id, db)
 
 

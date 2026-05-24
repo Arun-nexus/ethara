@@ -4,7 +4,17 @@ from middleware.db import get_db
 
 
 def check_project_permission(required_permission: str):
+    """
+    Factory function — returns a dependency that checks
+    if current user has required permission on the project.
 
+    Usage in routes:
+        @router.put("/{project_id}/tasks/{task_id}")
+        async def update_task(..., _=Depends(check_project_permission("read_write"))):
+
+    Permission hierarchy:
+        read < read_write < alter
+    """
     HIERARCHY = {"read": 1, "read_write": 2, "alter": 3}
 
     async def _check(
@@ -12,7 +22,7 @@ def check_project_permission(required_permission: str):
         current_user: dict = Depends(get_current_user),
         db=Depends(get_db)
     ):
-       
+        # Global admin bypasses all checks
         if current_user.get("role") == "admin":
             return current_user
 
@@ -23,9 +33,11 @@ def check_project_permission(required_permission: str):
                 detail="Project not found"
             )
 
+        # Owner always has full access
         if project["owner_id"] == current_user["_id"]:
             return current_user
 
+        # Find user in members list
         member = next(
             (m for m in project.get("members", [])
              if m["user_id"] == current_user["_id"]),

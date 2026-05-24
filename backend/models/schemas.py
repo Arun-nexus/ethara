@@ -13,7 +13,7 @@ class Role(str, Enum):
 class Permission(str, Enum):
     read       = "read"
     read_write = "read_write"
-    alter      = "alter"      
+    alter      = "alter"       # full admin-level on a project
 
 class TaskStatus(str, Enum):
     todo        = "todo"
@@ -57,7 +57,7 @@ class ProjectOut(BaseModel):
     name:        str
     description: str
     owner_id:    str
-    members:     List[dict] = []   
+    members:     List[dict] = []   # [{user_id, permission}]
     created_at:  datetime
     task_count:  int = 0
 
@@ -114,7 +114,7 @@ class InviteOut(BaseModel):
 
 class BranchCommit(BaseModel):
     message:    str
-    task_id:    Optional[str] = None  
+    task_id:    Optional[str] = None   # linked task if any
     author_id:  str
     timestamp:  datetime
     status:     Optional[TaskStatus] = None
@@ -122,7 +122,7 @@ class BranchCommit(BaseModel):
 class BranchOut(BaseModel):
     id:          str
     project_id:  str
-    name:        str           
+    name:        str            # "main" or feature branch name
     commits:     List[BranchCommit] = []
     created_at:  datetime
     is_main:     bool = False

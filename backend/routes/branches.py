@@ -22,6 +22,7 @@ async def get_timeline(
     _=Depends(check_project_permission("read")),
     db=Depends(get_db)
 ):
+    """Full git-style timeline — main + feature branches with enriched commits"""
     return await branch_svc.get_branch_timeline(project_id, db)
 
 
@@ -32,4 +33,5 @@ async def create_branch(
     current_user: dict = Depends(check_project_permission("read_write")),
     db=Depends(get_db)
 ):
+    """Create a feature branch for sub-tasks"""
     return await branch_svc.create_feature_branch(project_id, name, current_user["_id"], db)

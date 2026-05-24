@@ -19,6 +19,7 @@ async def create_task(project_id: str, data: dict, creator_id: str, db) -> dict:
     }
     await db.tasks.insert_one(doc)
 
+    # Auto-commit to main branch: "Task added: <title>"
     await _push_commit(
         project_id=project_id,
         message=f"Task added: {data['title']}",
@@ -35,11 +36,13 @@ async def update_task(task_id: str, updates: dict, user_id: str, db) -> dict:
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
+    # Remove None values so we don't overwrite with null
     clean = {k: v for k, v in updates.items() if v is not None}
     clean["updated_at"] = datetime.utcnow()
 
     await db.tasks.update_one({"_id": task_id}, {"$set": clean})
 
+    # If status changed → push a commit to branch (git-style!)
     if "status" in clean:
         await _push_commit(
             project_id=task["project_id"],

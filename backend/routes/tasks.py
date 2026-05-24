@@ -15,6 +15,7 @@ async def create_task(
     current_user: dict = Depends(check_project_permission("read_write")),
     db=Depends(get_db)
 ):
+    """Create task → auto-commits to main branch"""
     return await task_svc.create_task(project_id, body.model_dump(), current_user["_id"], db)
 
 
@@ -35,6 +36,7 @@ async def update_task(
     current_user: dict = Depends(check_project_permission("read_write")),
     db=Depends(get_db)
 ):
+    """Update task status → auto-commits to branch timeline"""
     return await task_svc.update_task(task_id, body.model_dump(), current_user["_id"], db)
 
 
@@ -42,7 +44,7 @@ async def update_task(
 async def delete_task(
     project_id: str,
     task_id: str,
-    _=Depends(check_project_permission("alter")),   
+    _=Depends(check_project_permission("alter")),   # needs alter permission
     db=Depends(get_db)
 ):
     await task_svc.delete_task(task_id, db)

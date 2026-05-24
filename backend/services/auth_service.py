@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 import uuid
 from config import settings
 
+# bcrypt hasher — same as your YouTube analyzer pattern
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -28,6 +29,7 @@ def create_access_token(user_id: str, role: str) -> str:
 
 
 async def register_user(user_data: dict, db) -> dict:
+    # Check duplicate email
     existing = await db.users.find_one({"email": user_data["email"]})
     if existing:
         raise HTTPException(

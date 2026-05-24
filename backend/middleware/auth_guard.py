@@ -5,6 +5,7 @@ from datetime import datetime
 from config import settings
 from middleware.db import get_db
 
+# Tells FastAPI to look for "Authorization: Bearer <token>" header
 bearer_scheme = HTTPBearer()
 
 

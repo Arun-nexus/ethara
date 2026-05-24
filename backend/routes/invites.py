@@ -12,9 +12,10 @@ router = APIRouter(tags=["Invites"])
 async def generate_invite(
     project_id: str,
     body: InviteCreate,
-    current_user: dict = Depends(check_project_permission("alter")), 
+    current_user: dict = Depends(check_project_permission("alter")),  # only alter+ can invite
     db=Depends(get_db)
 ):
+    """Generate invite code with a specific permission level"""
     return await invite_svc.create_invite(project_id, body.model_dump(), current_user["_id"], db)
 
 
@@ -33,5 +34,6 @@ async def join_project(
     current_user: dict = Depends(get_current_user),
     db=Depends(get_db)
 ):
+    """Any logged-in user can join a project using a valid code"""
     project = await invite_svc.join_with_code(body.code, current_user["_id"], db)
     return {"message": "Joined project successfully", "project_id": project["_id"]}
