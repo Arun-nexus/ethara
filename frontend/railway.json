@@ -5,7 +5,7 @@
     "buildCommand": "npm install && chmod +x node_modules/.bin/vite && npm run build"
   },
   "deploy": {
-    "startCommand": "npx serve@14 dist -s -l $PORT",
+    "startCommand": "npx serve@14 dist -s -p $PORT",
     "restartPolicyType": "ON_FAILURE"
   }
 }
